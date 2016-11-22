@@ -22,14 +22,14 @@ import (
 )
 
 type TestISO struct {
-	F2  *Llnumeric `field:"2" length:"19"`
-	F3  *Numeric   `field:"3" length:"6"`
-	F4  *Numeric   `field:"4" length:"12"`
-	F7  *Numeric   `field:"7" length:"10"`
-	F11 *Numeric   `field:"11" length:"6"`
-	F12 *Numeric   `field:"12" length:"6"`
-	F13 *Numeric   `field:"13" length:"4"`
-	F14 *Numeric   `field:"14" length:"4"`
+	F2   *Llnumeric `field:"2" length:"19"`
+	F3   *Numeric   `field:"3" length:"6"`
+	F4   *Numeric   `field:"4" length:"12"`
+	F7   *Numeric   `field:"7" length:"10"`
+	F11  *Numeric   `field:"11" length:"6"`
+	F12  *Numeric   `field:"12" length:"6"`
+	F13  *Numeric   `field:"13" length:"4"`
+	F14  *Numeric   `field:"14" length:"4"`
 	// BCD encoding with right-aligned value with odd length (for ex. "643" as [6 67] == "0643")
 	F19  *Numeric      `field:"19" length:"3" encode:"rbcd"`
 	F22  *Numeric      `field:"22" length:"3"`
@@ -668,7 +668,7 @@ func TestFieldNumericDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -688,7 +688,7 @@ func TestFieldNumericDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -708,7 +708,7 @@ func TestFieldNumericDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -758,7 +758,7 @@ func TestFieldLlnumericDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -778,7 +778,7 @@ func TestFieldLlnumericDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -798,7 +798,7 @@ func TestFieldLlnumericDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -903,7 +903,7 @@ func TestFieldLllnumericDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -923,7 +923,7 @@ func TestFieldLllnumericDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -943,7 +943,7 @@ func TestFieldLllnumericDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -1050,7 +1050,7 @@ func TestFieldLlvarDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -1070,7 +1070,7 @@ func TestFieldLlvarDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -1090,7 +1090,7 @@ func TestFieldLlvarDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes2 := isoBytes[0 : len(isoBytes)-1]
+	isoBytes2 := isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes2)
 
@@ -1195,7 +1195,7 @@ func TestFieldLllvarDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -1215,7 +1215,7 @@ func TestFieldLllvarDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -1235,7 +1235,7 @@ func TestFieldLllvarDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes2 := isoBytes[0 : len(isoBytes)-1]
+	isoBytes2 := isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes2)
 
@@ -1342,7 +1342,7 @@ func TestFieldAlphanumericDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -1378,7 +1378,7 @@ func TestFieldBinaryDecodeErrors(t *testing.T) {
 
 	assert.Empty(t, err)
 
-	isoBytes = isoBytes[0 : len(isoBytes)-1]
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
 
 	err = iso.Load(isoBytes)
 
@@ -1658,35 +1658,6 @@ func TestParseFieldsErrors(t *testing.T) {
 	assert.EqualError(t, err, "Critical error:data must be a struct")
 }
 
-// newDataIso creates DataIso
-func newDataIso() *TestISO {
-	return &TestISO{
-		F2:   NewLlnumeric(""),
-		F3:   NewNumeric(""),
-		F4:   NewNumeric(""),
-		F7:   NewNumeric(""),
-		F11:  NewNumeric(""),
-		F12:  NewNumeric(""),
-		F13:  NewNumeric(""),
-		F14:  NewNumeric(""),
-		F19:  NewNumeric(""),
-		F22:  NewNumeric(""),
-		F25:  NewNumeric(""),
-		F32:  NewLlnumeric(""),
-		F35:  NewLlnumeric(""),
-		F37:  NewAlphanumeric(""),
-		F39:  NewAlphanumeric(""),
-		F41:  NewAlphanumeric(""),
-		F42:  NewAlphanumeric(""),
-		F43:  NewAlphanumeric(""),
-		F49:  NewNumeric(""),
-		F52:  NewBinary(nil),
-		F53:  NewNumeric(""),
-		F120: NewLllnumeric(""),
-	}
-}
-
-
 func TestMessageExtendedEncode(t *testing.T) {
 	data := &TestISO{
 		F2:   NewLlnumeric("4276555555555555"),
@@ -1722,6 +1693,20 @@ func TestMessageExtendedEncode(t *testing.T) {
 	}
 
 	sample := []byte{48, 49, 48, 48, 70, 50, 51, 67, 50, 52, 56, 49, 50, 56, 69, 48, 57, 56, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 49, 48, 48, 49, 54, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 55, 55, 55, 48, 48, 48, 55, 48, 49, 49, 49, 49, 56, 52, 52, 48, 48, 48, 49, 50, 51, 49, 51, 49, 56, 52, 52, 48, 55, 48, 49, 49, 57, 48, 50, 6, 67, 57, 48, 49, 48, 50, 48, 54, 49, 50, 51, 52, 53, 54, 51, 55, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 61, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 48, 49, 48, 48, 48, 48, 48, 51, 50, 49, 49, 50, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 51, 52, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 84, 101, 115, 116, 32, 116, 101, 120, 116, 100, 48, 1, 2, 3, 4, 5, 6, 7, 8, 49, 50, 51, 52, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 49, 55, 65, 110, 111, 116, 104, 101, 114, 32, 116, 101, 115, 116, 32, 116, 101, 120, 116}
+
+	if bytes.Compare(res, sample) != 0 {
+		t.Error("ISO Encode error!")
+	}
+
+	iso = NewMessageExtended("0100", ASCII, true, false, data)
+
+	res, err = iso.Bytes()
+
+	if err != nil {
+		t.Error("ISO Encode error:", err)
+	}
+
+	sample = []byte{48, 49, 48, 48, 242, 60, 36, 129, 40, 224, 152, 0, 0, 0, 0, 0, 0, 0, 1, 0, 49, 54, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 55, 55, 55, 48, 48, 48, 55, 48, 49, 49, 49, 49, 56, 52, 52, 48, 48, 48, 49, 50, 51, 49, 51, 49, 56, 52, 52, 48, 55, 48, 49, 49, 57, 48, 50, 6, 67, 57, 48, 49, 48, 50, 48, 54, 49, 50, 51, 52, 53, 54, 51, 55, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 61, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 48, 49, 48, 48, 48, 48, 48, 51, 50, 49, 49, 50, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 51, 52, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 84, 101, 115, 116, 32, 116, 101, 120, 116, 100, 48, 1, 2, 3, 4, 5, 6, 7, 8, 49, 50, 51, 52, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 49, 55, 65, 110, 111, 116, 104, 101, 114, 32, 116, 101, 115, 116, 32, 116, 101, 120, 116}
 
 	if bytes.Compare(res, sample) != 0 {
 		t.Error("ISO Encode error!")
@@ -1822,7 +1807,7 @@ func TestMessageExtendedEncodeDecode(t *testing.T) {
 		F41: NewAlphanumeric("00000321"),
 		F42: NewAlphanumeric("120000000000034"),
 		F43: NewAlphanumeric("Test text"),
-		F45: NewLlnumeric("test test"),
+		F45: NewLlnumeric("1230abc"),
 		F49: NewNumeric("643"),
 		F52: NewBinary([]byte{1, 2, 3, 4, 5}),
 		F53: NewNumeric("1234000000000000"),
@@ -1832,9 +1817,9 @@ func TestMessageExtendedEncodeDecode(t *testing.T) {
 		F57: NewLllvar([]byte("test data2")),
 		F58: NewLllvar([]byte("test data3")),
 		F59: NewLlvar([]byte("test data4")),
-		F60: NewLllnumeric("another test text"),
-		F61: NewLllnumeric("another test text"),
-		F63: NewLllnumeric("another test text"),
+		F60: NewLllnumeric("123456789"),
+		F61: NewLllnumeric("abcdef"),
+		F63: NewLllnumeric("123abc456ef7890"),
 	}
 
 	iso := NewMessageExtended("0110", ASCII, true, true, data)
@@ -1869,4 +1854,205 @@ func TestMessageExtendedDecodeBitmapError(t *testing.T) {
 	err := iso.Load(input)
 
 	assert.EqualError(t, err, "Bitmap isn't ASCII formatted: encoding/hex: invalid byte: U+0000")
+}
+
+func TestMessageExtended(t *testing.T) {
+	type TestIso struct {
+		TestISO
+		AB *Llnumeric `field:"ab" length:"19"`
+	}
+
+	iso := MessageExtended{
+		Message{"", ASCII, true, TestIso{*newDataIso(), NewLlnumeric("")}},
+		false,
+	}
+
+	input := []byte{48, 49, 48, 48, 114, 60, 36, 129, 40, 224, 152, 0, 49, 54, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 55, 55, 55, 48, 48, 48, 55, 48, 49, 49, 49, 49, 56, 52, 52, 48, 48, 48, 49, 50, 51, 49, 51, 49, 56, 52, 52, 48, 55, 48, 49, 49, 57, 48, 50, 6, 67, 57, 48, 49, 48, 50, 48, 54, 49, 50, 51, 52, 53, 54, 51, 55, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 61, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 48, 49, 48, 48, 48, 48, 48, 51, 50, 49, 49, 50, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 51, 52, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 84, 101, 115, 116, 32, 116, 101, 120, 116, 100, 48, 1, 2, 3, 4, 5, 6, 7, 8, 49, 50, 51, 52, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48}
+
+	err := iso.Load(input)
+
+	assert.EqualError(t, err, "Critical error:value of field must be numeric")
+
+	type TestIso2 struct {
+		F2 *Llnumeric `field:"2" length:"19"`
+	}
+
+	iso = MessageExtended{
+		Message{"", ASCII, true, TestIso2{}},
+		false,
+	}
+
+	err = iso.Load(input)
+
+	assert.EqualError(t, err, "field 2 not defined")
+
+}
+
+func TestMessageExtendedMTIError(t *testing.T) {
+	data := &TestISO{
+		F2: NewLlnumeric("4276555555555555"),
+	}
+
+	iso := MessageExtended{
+		Message{"01000", ASCII, true, data},
+		false,
+	}
+
+	_, err := iso.Bytes()
+
+	assert.EqualError(t, err, "MTI is invalid")
+
+	iso.Mti = "abca"
+
+	_, err = iso.Bytes()
+
+	assert.EqualError(t, err, "MTI is invalid")
+
+	iso.Mti = ""
+
+	_, err = iso.Bytes()
+
+	assert.EqualError(t, err, "MTI is required")
+
+	iso = MessageExtended{
+		Message{"0100", BCD, true, data},
+		false,
+	}
+
+	res, err := iso.Bytes()
+
+	assert.Empty(t, err)
+
+	iso = MessageExtended{
+		Message{"", BCD, true, data},
+		false,
+	}
+
+	err = iso.Load(res[0:1])
+
+	assert.EqualError(t, err, "bad MTI raw data")
+
+	iso.Mti = "abca"
+
+	_, err = iso.Bytes()
+
+	assert.EqualError(t, err, "MTI is invalid")
+
+}
+
+func TestMessageExtendedMTIBCD(t *testing.T) {
+	data := &TestISO{
+		F2: NewLlnumeric("4276555555555555"),
+	}
+
+	iso := MessageExtended{
+		Message{"0100", BCD, true, data},
+		false,
+	}
+
+	res, err := iso.Bytes()
+
+	assert.Empty(t, err)
+
+	iso2 := MessageExtended{
+		Message{"0100", BCD, true, data},
+		false,
+	}
+
+	err = iso2.Load(res)
+
+	assert.Empty(t, err)
+
+	assert.Equal(t, iso, iso2)
+}
+
+func TestMessageExtendedParseFieldsErrors(t *testing.T) {
+	type test1 struct {
+		F2 *Llnumeric `field:"abc" length:"19"`
+	}
+
+	data1 := &test1{
+		F2: NewLlnumeric("4276555555555555"),
+	}
+
+	iso := MessageExtended{
+		Message{"0100", BCD, true, data1},
+		false,
+	}
+
+	_, err := iso.Bytes()
+
+	assert.EqualError(t, err, "Critical error:value of field must be numeric")
+
+	type test2 struct {
+		F2 *Llnumeric `field:"2" length:"abc"`
+	}
+
+	data2 := &test2{
+		F2: NewLlnumeric("4276555555555555"),
+	}
+
+	iso = MessageExtended{
+		Message{"0100", BCD, true, data2},
+		false,
+	}
+
+	_, err = iso.Bytes()
+
+	assert.EqualError(t, err, "Critical error:value of length must be numeric")
+
+	type test3 struct {
+		F2 string `field:"2" length:"2"`
+	}
+
+	data3 := &test3{
+		F2: string("123abc"),
+	}
+
+	iso = MessageExtended{
+		Message{"0100", BCD, true, data3},
+		false,
+	}
+
+	_, err = iso.Bytes()
+
+	assert.EqualError(t, err, "Critical error:field must be Iso8583Type")
+
+	iso = MessageExtended{
+		Message{"0100", BCD, true, nil},
+		false,
+	}
+
+	_, err = iso.Bytes()
+
+	assert.EqualError(t, err, "Critical error:data must be a struct")
+}
+
+
+// newDataIso creates DataIso
+func newDataIso() *TestISO {
+	return &TestISO{
+		F2:   NewLlnumeric(""),
+		F3:   NewNumeric(""),
+		F4:   NewNumeric(""),
+		F7:   NewNumeric(""),
+		F11:  NewNumeric(""),
+		F12:  NewNumeric(""),
+		F13:  NewNumeric(""),
+		F14:  NewNumeric(""),
+		F19:  NewNumeric(""),
+		F22:  NewNumeric(""),
+		F25:  NewNumeric(""),
+		F32:  NewLlnumeric(""),
+		F35:  NewLlnumeric(""),
+		F37:  NewAlphanumeric(""),
+		F39:  NewAlphanumeric(""),
+		F41:  NewAlphanumeric(""),
+		F42:  NewAlphanumeric(""),
+		F43:  NewAlphanumeric(""),
+		F49:  NewNumeric(""),
+		F52:  NewBinary(nil),
+		F53:  NewNumeric(""),
+		F120: NewLllnumeric(""),
+	}
 }
