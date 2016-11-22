@@ -62,4 +62,29 @@ Then you will get:
 08 00 20 00 00 40 02 0c 00 01 00 11 11 32 32 6f 6b 06 61 62 63 30 30 31 00 14 e4 bd a0 e5 a5 bd 20 67 6f 6c 61 6e 67 21 61 31 73 32 64 33 66 34
 ```
 
+If bitmap must be ASCII encoded as HEX (in some implementations of ISO 8583), for example this bitmap:
+
+```
+[]byte{0x70, 0x14, 0x05, 0x9C, 0x00, 0xC1, 0x81, 0x00}
+```
+
+in message will be presented as this HEX string:
+
+```
+7014059C00C18100
+```
+
+In this case 8-byte bitmap in message presented as 16 bytes of HEX string.
+
+For this case you need to use new struct: MessageExtended{}
+ 
+ For example:
+ 
+ ```
+ 	iso := NewMessageExtended("0100", ASCII, false, true, data)
+ ```
+ 
+If you set Message.AsciiBitmap to "true", then bitmap will be parsed or converted to bytes as ASCII-encoded HEX string.
+ 
+ 
 Additional example you can see in iso8583_test.go

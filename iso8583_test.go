@@ -1708,3 +1708,188 @@ func newDataIso() *TestISO {
 		F120: NewLllnumeric(""),
 	}
 }
+
+
+func TestMessageExtendedEncode(t *testing.T) {
+	data := &TestISO{
+		F2:   NewLlnumeric("4276555555555555"),
+		F3:   NewNumeric("000000"),
+		F4:   NewNumeric("000000077700"),
+		F7:   NewNumeric("0701111844"),
+		F11:  NewNumeric("000123"),
+		F12:  NewNumeric("131844"),
+		F13:  NewNumeric("0701"),
+		F14:  NewNumeric("1902"),
+		F19:  NewNumeric("643"),
+		F22:  NewNumeric("901"),
+		F25:  NewNumeric("02"),
+		F32:  NewLlnumeric("123456"),
+		F35:  NewLlnumeric("4276555555555555=12345678901234567890"),
+		F37:  NewAlphanumeric("987654321001"),
+		F39:  NewAlphanumeric(""),
+		F41:  NewAlphanumeric("00000321"),
+		F42:  NewAlphanumeric("120000000000034"),
+		F43:  NewAlphanumeric("Test text"),
+		F49:  NewNumeric("643"),
+		F52:  NewBinary([]byte{1, 2, 3, 4, 5, 6, 7, 8}),
+		F53:  NewNumeric("1234000000000000"),
+		F120: NewLllnumeric("Another test text"),
+	}
+
+	iso := NewMessageExtended("0100", ASCII, true, true, data)
+
+	res, err := iso.Bytes()
+
+	if err != nil {
+		t.Error("ISO Encode error:", err)
+	}
+
+	sample := []byte{48, 49, 48, 48, 70, 50, 51, 67, 50, 52, 56, 49, 50, 56, 69, 48, 57, 56, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 49, 48, 48, 49, 54, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 55, 55, 55, 48, 48, 48, 55, 48, 49, 49, 49, 49, 56, 52, 52, 48, 48, 48, 49, 50, 51, 49, 51, 49, 56, 52, 52, 48, 55, 48, 49, 49, 57, 48, 50, 6, 67, 57, 48, 49, 48, 50, 48, 54, 49, 50, 51, 52, 53, 54, 51, 55, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 61, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 48, 49, 48, 48, 48, 48, 48, 51, 50, 49, 49, 50, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 51, 52, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 84, 101, 115, 116, 32, 116, 101, 120, 116, 100, 48, 1, 2, 3, 4, 5, 6, 7, 8, 49, 50, 51, 52, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 49, 55, 65, 110, 111, 116, 104, 101, 114, 32, 116, 101, 115, 116, 32, 116, 101, 120, 116}
+
+	if bytes.Compare(res, sample) != 0 {
+		t.Error("ISO Encode error!")
+	}
+}
+
+func TestMessageExtendedDecode(t *testing.T) {
+
+	input := []byte{48, 49, 48, 48, 70, 50, 51, 67, 50, 52, 56, 49, 50, 56, 69, 48, 57, 56, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 49, 48, 48, 49, 54, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 55, 55, 55, 48, 48, 48, 55, 48, 49, 49, 49, 49, 56, 52, 52, 48, 48, 48, 49, 50, 51, 49, 51, 49, 56, 52, 52, 48, 55, 48, 49, 49, 57, 48, 50, 6, 67, 57, 48, 49, 48, 50, 48, 54, 49, 50, 51, 52, 53, 54, 51, 55, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 61, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 48, 49, 48, 48, 48, 48, 48, 51, 50, 49, 49, 50, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 51, 52, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 84, 101, 115, 116, 32, 116, 101, 120, 116, 100, 48, 1, 2, 3, 4, 5, 6, 7, 8, 49, 50, 51, 52, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 49, 55, 65, 110, 111, 116, 104, 101, 114, 32, 116, 101, 115, 116, 32, 116, 101, 120, 116}
+
+	// init empty iso message struct
+	iso := NewMessageExtended("", ASCII, true, true, newDataIso())
+
+	// parse data from bytes to iso struct
+	err := iso.Load(input)
+
+	if err != nil {
+		t.Error("ISO Decode error:", err)
+	}
+
+	resultFields := iso.Data.(*TestISO)
+
+	// check BCD numeric values length
+	assert.Equal(t, 3, len(resultFields.F19.Value))
+	assert.Equal(t, 3, len(resultFields.F49.Value))
+
+	// check values for BCD (lBCD) and rBCD
+	assert.Equal(t, "643", resultFields.F19.Value)
+	assert.Equal(t, "643", resultFields.F49.Value)
+
+	var res []byte
+
+	// set second bitmap because field 120 in struct (need if more than 63 fields in message)
+	iso.SecondBitmap = true
+
+	// before encode add "0" to left of F19 for testing rBCD encoding
+	iso.Data.(*TestISO).F19.Value = "0" + iso.Data.(*TestISO).F19.Value
+
+	// encode iso struct to bytes
+	res, err = iso.Bytes()
+
+	if err != nil {
+		t.Error("ISO Encode error:", err)
+	}
+
+	// parse data from bytes to iso struct to test Bytes() function
+	err = iso.Load(res)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	// set field 120 value to empty string
+	iso.Data.(*TestISO).F120.Value = ""
+
+	iso.SecondBitmap = false
+
+	// encode iso struct to bytes
+	res, err = iso.Bytes()
+
+	if err != nil {
+		t.Error("ISO Encode error:", err)
+	}
+
+	// parse data from bytes to iso struct to test Bytes() function
+	err = iso.Load(res)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	sample := []byte{48, 49, 48, 48, 55, 50, 51, 67, 50, 52, 56, 49, 50, 56, 69, 48, 57, 56, 48, 48, 49, 54, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 55, 55, 55, 48, 48, 48, 55, 48, 49, 49, 49, 49, 56, 52, 52, 48, 48, 48, 49, 50, 51, 49, 51, 49, 56, 52, 52, 48, 55, 48, 49, 49, 57, 48, 50, 6, 67, 57, 48, 49, 48, 50, 48, 54, 49, 50, 51, 52, 53, 54, 51, 55, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 61, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 48, 49, 48, 48, 48, 48, 48, 51, 50, 49, 49, 50, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 51, 52, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 84, 101, 115, 116, 32, 116, 101, 120, 116, 100, 48, 1, 2, 3, 4, 5, 6, 7, 8, 49, 50, 51, 52, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48}
+
+	if bytes.Compare(res, sample) != 0 {
+		t.Error("ISO Encode error!")
+	}
+}
+
+func TestMessageExtendedEncodeDecode(t *testing.T) {
+
+	data := &TestISO2{
+		F2:  NewLlnumeric("4276555555555555"),
+		F3:  NewNumeric("000000"),
+		F4:  NewNumeric("000000077700"),
+		F7:  NewNumeric("0701111844"),
+		F11: NewNumeric("123"),
+		F12: NewNumeric("131844"),
+		F13: NewNumeric("0701"),
+		F14: NewNumeric("1902"),
+		F19: NewNumeric("643"),
+		F22: NewNumeric("901"),
+		F25: NewNumeric("02"),
+		F28: NewAlphanumeric("abcd12345"),
+		F32: NewLlnumeric("123456"),
+		F35: NewLlnumeric("4276555555555555=12345678901234567890"),
+		F37: NewAlphanumeric("987654321001"),
+		F39: NewAlphanumeric("00"),
+		F41: NewAlphanumeric("00000321"),
+		F42: NewAlphanumeric("120000000000034"),
+		F43: NewAlphanumeric("Test text"),
+		F45: NewLlnumeric("test test"),
+		F49: NewNumeric("643"),
+		F52: NewBinary([]byte{1, 2, 3, 4, 5}),
+		F53: NewNumeric("1234000000000000"),
+		F54: NewLlvar([]byte{7, 8, 56, 71, 35}),
+		F55: NewLlvar([]byte{0, 1, 2, 5, 51, 47, 45, 32, 158}),
+		F56: NewLllvar([]byte("test data1")),
+		F57: NewLllvar([]byte("test data2")),
+		F58: NewLllvar([]byte("test data3")),
+		F59: NewLlvar([]byte("test data4")),
+		F60: NewLllnumeric("another test text"),
+		F61: NewLllnumeric("another test text"),
+		F63: NewLllnumeric("another test text"),
+	}
+
+	iso := NewMessageExtended("0110", ASCII, true, true, data)
+
+	res, err := iso.Bytes()
+
+	if err != nil {
+		t.Error("ISO Encode error:", err)
+	}
+
+	iso2 := NewMessageExtended("0110", ASCII, false, true, data)
+
+	err = iso2.Load(res)
+
+	if err != nil {
+		t.Error("ISO Encode error:", err)
+	}
+
+	// check data after encode/decode
+	assert.Equal(t, iso, iso2)
+}
+
+func TestMessageExtendedDecodeBitmapError(t *testing.T) {
+
+	// byte number 5 is invalid: U+0000
+	input := []byte{48, 49, 48, 48, 0, 50, 51, 67, 50, 52, 56, 49, 50, 56, 69, 48, 57, 56, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 49, 48, 48, 49, 54, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 55, 55, 55, 48, 48, 48, 55, 48, 49, 49, 49, 49, 56, 52, 52, 48, 48, 48, 49, 50, 51, 49, 51, 49, 56, 52, 52, 48, 55, 48, 49, 49, 57, 48, 50, 6, 67, 57, 48, 49, 48, 50, 48, 54, 49, 50, 51, 52, 53, 54, 51, 55, 52, 50, 55, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 61, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 48, 49, 48, 48, 48, 48, 48, 51, 50, 49, 49, 50, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 51, 52, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 84, 101, 115, 116, 32, 116, 101, 120, 116, 100, 48, 1, 2, 3, 4, 5, 6, 7, 8, 49, 50, 51, 52, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 48, 49, 55, 65, 110, 111, 116, 104, 101, 114, 32, 116, 101, 115, 116, 32, 116, 101, 120, 116}
+
+	// init empty iso message struct
+	iso := NewMessageExtended("", ASCII, true, true, newDataIso())
+
+	// parse data from bytes to iso struct
+	err := iso.Load(input)
+
+	assert.EqualError(t, err, "Bitmap isn't ASCII formatted: encoding/hex: invalid byte: U+0000")
+}

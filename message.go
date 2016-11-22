@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"encoding/hex"
 )
 
 const (
@@ -45,10 +46,26 @@ type Message struct {
 	Data         interface{}
 }
 
+type MessageExtended struct {
+	Message
+	// sometimes bitmap can be represented as ASCII HEX code - 16 bytes of HEX for 8 bytes bitmap, 32 HEX for 16 bytes bitmap
+	// @see Load() function
+	AsciiBitmap bool
+}
+
 // NewMessage creates new Message structure
 func NewMessage(mti string, data interface{}) *Message {
 	return &Message{mti, ASCII, false, data}
 }
+
+// NewMessage creates new Message structure
+func NewMessageExtended(mti string, mtiEncode int, secondBitmap, asciiBitmap bool, data interface{}) *MessageExtended {
+	return &MessageExtended{
+		Message{mti, mtiEncode, secondBitmap, data},
+		asciiBitmap,
+	}
+}
+
 
 // Bytes marshall Message to bytes
 func (m *Message) Bytes() (ret []byte, err error) {
@@ -108,6 +125,75 @@ func (m *Message) Bytes() (ret []byte, err error) {
 			}
 		}
 	}
+	ret = append(ret, bitmap...)
+	ret = append(ret, data...)
+
+	return ret, nil
+}
+
+// Bytes marshall Message to bytes
+func (m *MessageExtended) Bytes() (ret []byte, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("Critical error:" + fmt.Sprint(r))
+			ret = nil
+		}
+	}()
+
+	ret = make([]byte, 0)
+
+	// generate MTI:
+	mtiBytes, err := m.encodeMti()
+	if err != nil {
+		return nil, err
+	}
+	ret = append(ret, mtiBytes...)
+
+	// generate bitmap and fields:
+	fields := parseFields(m.Data)
+
+	byteNum := 8
+	if m.SecondBitmap {
+		byteNum = 16
+	}
+	bitmap := make([]byte, byteNum)
+	data := make([]byte, 0, 512)
+
+	for byteIndex := 0; byteIndex < byteNum; byteIndex++ {
+		for bitIndex := 0; bitIndex < 8; bitIndex++ {
+
+			i := byteIndex*8 + bitIndex + 1
+
+			// if we need second bitmap (additional 8 bytes) - set first bit in first bitmap
+			if m.SecondBitmap && i == 1 {
+				step := uint(7 - bitIndex)
+				bitmap[byteIndex] |= (0x01 << step)
+			}
+
+			if info, ok := fields[i]; ok {
+
+				// if field is empty, then we can't add it to bitmap
+				if info.Field.IsEmpty() {
+					continue
+				}
+
+				// mark 1 in bitmap:
+				step := uint(7 - bitIndex)
+				bitmap[byteIndex] |= (0x01 << step)
+				// append data:
+				d, err := info.Field.Bytes(info.Encode, info.LenEncode, info.Length)
+				if err != nil {
+					return nil, err
+				}
+				data = append(data, d...)
+			}
+		}
+	}
+
+	if m.AsciiBitmap {
+		bitmap = []byte(strings.ToUpper(hex.EncodeToString(bitmap)))
+	}
+
 	ret = append(ret, bitmap...)
 	ret = append(ret, data...)
 
@@ -233,6 +319,84 @@ func (m *Message) Load(raw []byte) (err error) {
 	}
 	bitByte := raw[start : start+byteNum]
 	start += byteNum
+
+	for byteIndex := 0; byteIndex < byteNum; byteIndex++ {
+		for bitIndex := 0; bitIndex < 8; bitIndex++ {
+			step := uint(7 - bitIndex)
+			if (bitByte[byteIndex] & (0x01 << step)) == 0 {
+				continue
+			}
+
+			i := byteIndex*8 + bitIndex + 1
+			if i == 1 {
+				// field 1 is the second bitmap
+				continue
+			}
+			f, ok := fields[i]
+			if !ok {
+				return fmt.Errorf("field %d not defined", i)
+			}
+			l, err := f.Field.Load(raw[start:], f.Encode, f.LenEncode, f.Length)
+			if err != nil {
+				return err
+			}
+			start += l
+		}
+	}
+	return nil
+}
+
+
+// Load unmarshall Message from bytes
+func (m *MessageExtended) Load(raw []byte) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("Critical error:" + fmt.Sprint(r))
+		}
+	}()
+
+	if m.Mti == "" {
+		m.Mti, err = decodeMti(raw, m.MtiEncode)
+		if err != nil {
+			return err
+		}
+	}
+	start := 4
+	if m.MtiEncode == BCD {
+		start = 2
+	}
+
+	fields := parseFields(m.Data)
+
+	byteNum := 8
+	var bitByte []byte
+	// sometimes bitmap can be represented as ASCII HEX code - 16 bytes of HEX for 8 bytes bitmap, 32 HEX for 16 bytes bitmap
+	// we need to decode HEX from first 16 bytes, check first bit, and if need - set m.SecondBitmap = true
+	// then we need to decode HEX of all bitmap bytes (16 or 32)
+	if m.AsciiBitmap {
+		b, err := hex.DecodeString(fmt.Sprintf("%s",raw[start:start+byteNum*2]))
+		if err != nil {
+			return fmt.Errorf("Bitmap isn't ASCII formatted: %s", err)
+		}
+
+		if b[0]&0x80 == 0x80 {
+			m.SecondBitmap = true
+			byteNum = 16
+		}
+
+		bitByte, err = hex.DecodeString(fmt.Sprintf("%s",raw[start:start+byteNum*2]))
+		start += byteNum*2
+	} else {
+
+		if raw[start] & 0x80 == 0x80 {
+			// 1st bit == 1
+			m.SecondBitmap = true
+			byteNum = 16
+		}
+		bitByte = raw[start : start + byteNum]
+		start += byteNum
+	}
+
 
 	for byteIndex := 0; byteIndex < byteNum; byteIndex++ {
 		for bitIndex := 0; bitIndex < 8; bitIndex++ {
