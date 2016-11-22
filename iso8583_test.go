@@ -2028,6 +2028,165 @@ func TestMessageExtendedParseFieldsErrors(t *testing.T) {
 	assert.EqualError(t, err, "Critical error:data must be a struct")
 }
 
+func TestMessageExtendedFieldNumericEncodeErrors(t *testing.T) {
+
+	type test1 struct {
+		F2 *Numeric `field:"2" length:"6" encode:"test"`
+	}
+
+	data1 := &test1{
+		F2: NewNumeric("123456"),
+	}
+
+	iso := MessageExtended{
+		Message{"0110", ASCII, false, data1},
+		false,
+	}
+
+	_, err := iso.Bytes()
+
+	assert.EqualError(t, err, "invalid encoder")
+
+	type test2 struct {
+		F2 *Numeric `field:"2"`
+	}
+
+	data2 := &test2{
+		F2: NewNumeric("123456"),
+	}
+
+	iso = MessageExtended{
+		Message{"0110", ASCII, false, data2},
+		false,
+	}
+
+
+	_, err = iso.Bytes()
+
+	assert.EqualError(t, err, "missing length")
+
+	type test3 struct {
+		F2 *Numeric `field:"2" length:"3"`
+	}
+
+	data3 := &test3{
+		F2: NewNumeric("123456"),
+	}
+
+	iso = MessageExtended{
+		Message{"0110", ASCII, false, data3},
+		false,
+	}
+
+	_, err = iso.Bytes()
+
+	assert.EqualError(t, err, "length of value is longer than definition; type=Numeric, def_len=3, len=6")
+}
+
+func TestMessageExtendedFieldNumericDecodeErrors(t *testing.T) {
+	type test1 struct {
+		F2 *Numeric `field:"2" length:"10" encode:"ascii"`
+	}
+
+	data1 := &test1{
+		F2: NewNumeric("123456"),
+	}
+
+	iso := MessageExtended{
+		Message{"0110", ASCII, false, data1},
+		false,
+	}
+
+	isoBytes, err := iso.Bytes()
+
+	assert.Empty(t, err)
+
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
+
+	err = iso.Load(isoBytes)
+
+	assert.EqualError(t, err, "field 2: bad raw data")
+
+	type test2 struct {
+		F2 *Numeric `field:"2" length:"10" encode:"bcd"`
+	}
+
+	data2 := &test2{
+		F2: NewNumeric("123456"),
+	}
+
+	iso = MessageExtended{
+		Message{"0110", ASCII, false, data2},
+		false,
+	}
+
+	isoBytes, err = iso.Bytes()
+
+	assert.Empty(t, err)
+
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
+
+	err = iso.Load(isoBytes)
+
+	assert.EqualError(t, err, "field 2: bad raw data")
+
+	type test3 struct {
+		F2 *Numeric `field:"2" length:"10" encode:"rbcd"`
+	}
+
+	data3 := &test3{
+		F2: NewNumeric("123456"),
+	}
+
+	iso = MessageExtended{
+		Message{"0110", ASCII, false, data3},
+		false,
+	}
+
+	isoBytes, err = iso.Bytes()
+
+	assert.Empty(t, err)
+
+	isoBytes = isoBytes[0 : len(isoBytes) - 1]
+
+	err = iso.Load(isoBytes)
+
+	assert.EqualError(t, err, "field 2: bad raw data")
+
+	type test4 struct {
+		F2 *Numeric `field:"2" encode:"rbcd"`
+	}
+
+	data4 := &test4{
+		F2: NewNumeric(""),
+	}
+
+	iso = MessageExtended{
+		Message{"0110", ASCII, false, data4},
+		false,
+	}
+
+	err = iso.Load(isoBytes)
+
+	assert.EqualError(t, err, "field 2: missing length")
+
+	type test5 struct {
+		F2 *Numeric `field:"2" length:"10" encode:"test"`
+	}
+
+	data5 := &test5{
+		F2: NewNumeric(""),
+	}
+
+	iso = MessageExtended{
+		Message{"0110", ASCII, false, data5},
+		false,
+	}
+
+	err = iso.Load(isoBytes)
+
+	assert.EqualError(t, err, "field 2: invalid encoder")
+}
 
 // newDataIso creates DataIso
 func newDataIso() *TestISO {
